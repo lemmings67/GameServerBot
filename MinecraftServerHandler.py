@@ -12,7 +12,7 @@ class MinecraftServerHandler(GameServerHandler):
         super().__init__(host, password, port, tlsmode, timeout)
 
     def getPlayerList(self):
-        output = self.con.command("/list")
+        output = self.command("/list")
         logging.debug("{} <---- \n{}".format(self.host, output))
         output = re.sub('.*: ','',output)
         output = re.sub(' ', '', output)
@@ -21,7 +21,7 @@ class MinecraftServerHandler(GameServerHandler):
         return output.split(',')
 
     def sendMessage(self, message):
-        return self.con.command("/say " + message)
+        return self.command("/say " + message)
 
 
 

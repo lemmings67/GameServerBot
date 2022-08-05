@@ -12,7 +12,7 @@ class ArkServerHandler(GameServerHandler):
         super().__init__(host, password, port, tlsmode, timeout)
 
     def getPlayerList(self):
-        result = self.con.command('ListPlayers')
+        result = self.command('ListPlayers')
         logging.debug("{} <---- \n{}".format(self.host, result))
         if re.search('Keep Alive', result):
             return self.players
@@ -24,6 +24,6 @@ class ArkServerHandler(GameServerHandler):
         return output
 
     def sendMessage(self, message):
-        return sself.con.command('ServerChat ' + message)
+        return sself.command('ServerChat ' + message)
 
 
