@@ -51,24 +51,24 @@ class GameServerHandler(MCRcon, threading.Thread):
     def setStatus(self, new_status):
         if (self.server_status != new_status):
             if new_status == "UP": 
-                logging.info("{} - Connexion au serveur établie".format(self.host))
+                logging.info("{self.host} - Connexion au serveur établie")
             else:
-                logging.info("{} - Déconnexion du serveur".format(self.host))
+                logging.info(f"{self.host} - Déconnexion du serveur")
             self.server_status=new_status
             self.last_update = datetime.datetime.now()
-            logging.info("{} - Status is {}".format(self.host, self.server_status))
+            logging.info(f"{self.host} - Status is {self.server_status}")
             self.update()
 
     def run(self):
-        while self.stopped == False:
+        while not self.stopped:
             try:
                 if (self.server_status != "UP"):
-                    logging.debug("{} - Tentative de connexion au serveur".format(self.host))
+                    logging.debug(f"{self.host} - Tentative de connexion au serveur")
                     self.connect()
                     self.setStatus("UP")
                 self.setPlayers(self.getPlayerList())
             except (Exception) as err:
-                logging.debug("{} - {}".format(self.host, err))                
+                logging.debug(f"{self.host} - {err}")                
                 self.setStatus("DOWN")
                 self.players=[]
                 self.disconnect()
