@@ -19,7 +19,7 @@ class MinecraftServerHandler(GameServerHandler):
 
         self.run_command("/list")
         
-        logging.debug("{} <---- \n{}".format(self.host, output))
+        logging.debug(f"{self.host} <---- \n{output}")
         output = re.sub('.*: ','',output)
         output = re.sub(' ', '', output)
         
