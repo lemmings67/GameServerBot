@@ -37,7 +37,7 @@ class GameServerHandler(MCRcon, threading.Thread):
             'last_change': self.last_change.isoformat(),
             'connected_players': self.players
         }
-        with open(config['DEFAULT']['webserver_root'] + self.host + '.json', 'w') as f:
+        with open(config['DEFAULT']['webserver_root'] + self.server_name + '.json', 'w') as f:
             f.write(json.dumps(server_dict))
 
     # Mise à jour de la liste des joueurs 
@@ -45,35 +45,38 @@ class GameServerHandler(MCRcon, threading.Thread):
         if (self.players != new_players):
             self.players = new_players
             self.last_change = datetime.datetime.now()
-            logging.info("{} - {} players connected: {}".format(self.host, len(self.players), self.players))
+            logging.info("{} - {} players connected: {}".format(self.server_name, len(self.players), self.players))
             self.update()
 
     # Mise à jour du status
     def setStatus(self, new_status):
         if (self.server_status != new_status):
             if new_status == "UP": 
-                logging.info("{} - Connexion au serveur établie".format(self.host))
+                logging.info(f"{self.server_name} - Connexion au serveur établie")
             else:
-                logging.info("{} - Déconnexion du serveur".format(self.host))
+                logging.info(f"{self.server_name} - Déconnexion du serveur")
             self.server_status=new_status
             self.last_update = datetime.datetime.now()
-            logging.info("{} - Status is {}".format(self.host, self.server_status))
+            logging.info(f"{self.server_name} - Status is {self.server_status}")
             self.update()
 
     def getName(self):
         return self.server_name
 
+    def stop(self):
+        self.stopped = True
+
     def run(self):
-        while self.stopped == False:
+        while not self.stopped:
             try:
                 self.last_update = datetime.datetime.now()
                 if (self.server_status != "UP"):
-                    logging.debug("{} - Tentative de connexion au serveur".format(self.host))
+                    logging.debug(f"{self.server_name} - Tentative de connexion au serveur {self.host}")
                     self.connect()
                     self.setStatus("UP")
                 self.setPlayers(self.getPlayerList())
             except (Exception) as err:
-                logging.debug("{} - {}".format(self.host, err))                
+                logging.debug(f"{self.server_name} - {err}")                
                 self.setStatus("DOWN")
                 self.players=[]
                 self.disconnect()
