@@ -12,18 +12,19 @@ class ArkServerHandler(GameServerHandler):
         super().__init__(host, password, port, tlsmode, timeout)
 
     def getPlayerList(self):
-        result = self.con.command('ListPlayers')
-        logging.debug("{} <---- \n{}".format(self.host, result))
+        result = self.command('ListPlayers')
+        logging.debug("{self.host} <---- \n{result}")
         if re.search('Keep Alive', result):
             return self.players
-        output=[]
-        tmp = result.splitlines()
-        for line in tmp:
-            if re.match('[0-9]\..*, .*',line):
-                output.append(re.sub('[0-9]. ', '', re.sub(', .*$', '', line)))
-        return output
+        
+        return [
+            re.sub('[0-9]. ', '', re.sub(', .*$', '', line))
+            for line in
+                result.splitlines()
+            if re.match('[0-9]\..*, .*',line)
+        ]
 
     def sendMessage(self, message):
-        return sself.con.command('ServerChat ' + message)
+        return self.command('ServerChat ' + message)
 
 

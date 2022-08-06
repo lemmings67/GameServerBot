@@ -1,8 +1,5 @@
-import threading
 import re
-import time
 import logging
-from mcrcon import MCRcon
 
 from GameServerHandler import GameServerHandler
 
@@ -11,17 +8,28 @@ class MinecraftServerHandler(GameServerHandler):
     def __init__(self, host, password, port=25575, tlsmode=0, timeout=5):
         super().__init__(host, password, port, tlsmode, timeout)
 
+    def run_command(self, command):
+        try:
+            return self.command(command)
+        except Exception as e:
+            logging.debug("{self.host} <---- \n{output}")
+            return ""
+
     def getPlayerList(self):
-        output = self.con.command("/list")
+
+        self.run_command("/list")
+        
         logging.debug("{} <---- \n{}".format(self.host, output))
         output = re.sub('.*: ','',output)
         output = re.sub(' ', '', output)
+        
         if output=='':
             return []
+        
         return output.split(',')
 
     def sendMessage(self, message):
-        return self.con.command("/say " + message)
+        return self.run_command("/say " + message)
 
 
 
