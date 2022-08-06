@@ -8,8 +8,8 @@ from GameServerHandler import GameServerHandler
 
 class MinecraftServerHandler(GameServerHandler):
 
-    def __init__(self, host, password, port=25575, tlsmode=0, timeout=5):
-        super().__init__(host, password, port, tlsmode, timeout)
+    def __init__(self, name, host, password, port=25575, tlsmode=0, timeout=5):
+        super().__init__(name, host, password, port, tlsmode, timeout)
 
     def getPlayerList(self):
         output = self.command("/list")

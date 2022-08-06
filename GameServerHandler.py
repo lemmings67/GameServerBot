@@ -24,8 +24,9 @@ class GameServerHandler(MCRcon, threading.Thread):
     # Liste des joueurs
     players=[]
 
-    def __init__(self, host, password, port, tlsmode=0, timeout=5):
+    def __init__(self, name, host, password, port, tlsmode=0, timeout=5):
         super().__init__(host, password, port, tlsmode, timeout)
+        self.server_name = name
         threading.Thread.__init__(self)
 
     # Mise à jour de l'état du serveur
@@ -59,9 +60,13 @@ class GameServerHandler(MCRcon, threading.Thread):
             logging.info("{} - Status is {}".format(self.host, self.server_status))
             self.update()
 
+    def getName(self):
+        return self.server_name
+
     def run(self):
         while self.stopped == False:
             try:
+                self.last_update = datetime.datetime.now()
                 if (self.server_status != "UP"):
                     logging.debug("{} - Tentative de connexion au serveur".format(self.host))
                     self.connect()
