@@ -6,13 +6,16 @@ import datetime
 import signal, os
 
 from ArkServerHandler import ArkServerHandler
+from ArkServerAHandler import ArkServerAHandler
 from MinecraftServerHandler import MinecraftServerHandler
+from Sd2dServerHandler import Sd2dServerHandler
+from PalWorldServerHandler import PalWorldServerHandler
 
 config = configparser.ConfigParser()
 
 config.read('config.ini')
 
-logging.basicConfig(format='%(asctime)s %(levelname)s - %(message)s', datefmt='%Y-%m-%d %H:%M:%S',filename='bot.log', encoding='utf-8', level=logging.INFO)
+logging.basicConfig(format='%(asctime)s %(levelname)s - %(message)s', datefmt='%Y-%m-%d %H:%M:%S',filename='bot.log', encoding='utf-8', level=logging.DEBUG)
 
 logging.info("Démarrage du bot")
 
@@ -29,6 +32,24 @@ def init_server(name):
     if (config[name]['type'] == 'ARK'):
         logging.info(f"Chargement d'un serveur {name} (ARK)")
         newserver = ArkServerHandler(name=name, host=config[name]['server'], password=config[name]['password'])
+        servers.append(newserver)
+        newserver.start()
+        return newserver
+    if (config[name]['type'] == 'ARKA'):
+        logging.info(f"Chargement d'un serveur {name} (ARKA)")
+        newserver = ArkServerAHandler(name=name, host=config[name]['server'], password=config[name]['password'])
+        servers.append(newserver)
+        newserver.start()
+        return newserver
+    if (config[name]['type'] == '7D2D'):
+        logging.info(f"Chargement d'un serveur {name} (7D2D)")
+        newserver = Sd2dServerHandler(name=name, host=config[name]['server'], password=config[name]['password'])
+        servers.append(newserver)
+        newserver.start()
+        return newserver
+    if (config[name]['type'] == 'PALWORLD'):
+        logging.info(f"Chargement d'un serveur {name} (PALWORLD)")
+        newserver = PalWorldServerHandler(name=name, host=config[name]['server'], password=config[name]['password'])
         servers.append(newserver)
         newserver.start()
         return newserver

@@ -8,6 +8,7 @@ import os
 
 from ArkServerHandler import ArkServerHandler
 from MinecraftServerHandler import MinecraftServerHandler
+from Sd2dServerHandler import Sd2dServerHandler
 
 config = configparser.ConfigParser()
 
@@ -45,9 +46,11 @@ if (cmd_opt != None):
         print("Server: ", servername)
 
         if (config[servername]['type'] == 'MINECRAFT'):
-            server = MinecraftServerHandler(host=config[servername]['server'], password=config[servername]['password'])
+            server = MinecraftServerHandler(servername, host=config[servername]['server'], password=config[servername]['password'])
         if (config[servername]['type'] == 'ARK'):
-            server = ArkServerHandler(host=config[servername]['server'], password=config[servername]['password'])
+            server = ArkServerHandler(servername, host=config[servername]['server'], password=config[servername]['password'])
+        if (config[servername]['type'] == '7D2D'):
+            server = Sd2dServerHandler(servername, host=config[servername]['server'], password=config[servername]['password'])
 
         lsgm_cmd = config[servername]['lsgm_cmd']        
         execute_cmd(lsgm_cmd, cmd_opt)

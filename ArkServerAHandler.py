@@ -6,9 +6,9 @@ from mcrcon import MCRcon
 
 from GameServerHandler import GameServerHandler
 
-class ArkServerHandler(GameServerHandler):
+class ArkServerAHandler(GameServerHandler):
 
-    def __init__(self, name, host, password, port=27020, tlsmode=0, timeout=5):
+    def __init__(self, name, host, password, port=32330, tlsmode=0, timeout=5):
         super().__init__(name, host, password, port, tlsmode, timeout)
 
     def getPlayerList(self):

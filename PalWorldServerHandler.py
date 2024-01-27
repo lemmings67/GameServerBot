@@ -6,24 +6,23 @@ from mcrcon import MCRcon
 
 from GameServerHandler import GameServerHandler
 
-class ArkServerHandler(GameServerHandler):
+class PalWorldServerHandler(GameServerHandler):
 
-    def __init__(self, name, host, password, port=27020, tlsmode=0, timeout=5):
+    def __init__(self, name, host, password, port=25575, tlsmode=0, timeout=5):
         super().__init__(name, host, password, port, tlsmode, timeout)
 
     def getPlayerList(self):
-        result = self.command('ListPlayers')
+        result = self.command('ShowPlayers')
         logging.debug(f"{self.host} <---- \n{result}")
-        if re.search('Keep Alive', result):
-            return self.players
         output=[]
         tmp = result.splitlines()
         for line in tmp:
-            if re.match('[0-9]\..*, .*',line):
-                output.append(re.sub('[0-9]. ', '', re.sub(', .*$', '', line)))
+            if not re.match('name,playeruid,steamid', line):
+                if re.match('.*,.*,.*',line):
+                    output.append(line.split(',')[0])
         return output
 
     def sendMessage(self, message):
-        return self.command('ServerChat ' + message)
+        return self.command(message)
 
 
